@@ -1,0 +1,2157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 문제해결 실무 강의교안 | AI닷</title>
+<link href="https://fonts.googleapis.com/css2?family=Circular+Std:wght@400;500;700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ── Spotify Light Design Tokens ── */
+  :root {
+    --sp-green:       #1DB954;
+    --sp-green-dark:  #1aa34a;
+    --sp-green-light: #e8f9ee;
+    --sp-black:       #121212;
+    --sp-white:       #FFFFFF;
+    --sp-bg:          #F6F6F6;
+    --sp-surface:     #FFFFFF;
+    --sp-surface2:    #F0F0F0;
+    --sp-border:      #E0E0E0;
+    --sp-text:        #121212;
+    --sp-text-sub:    #535353;
+    --sp-text-muted:  #878787;
+    --sp-accent:      #1DB954;
+    --sp-orange:      #E8A900;
+    --sp-orange-bg:   #FFF9E6;
+    --sp-blue:        #2D46B9;
+    --sp-blue-bg:     #EEF1FF;
+    --sp-red:         #E91429;
+    --sp-red-bg:      #FDECEA;
+    --sp-purple:      #7D3C98;
+    --sp-purple-bg:   #F5EEF8;
+
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 32px;
+
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.14);
+
+    --font-main: 'Noto Sans KR', sans-serif;
+    --font-display: 'Noto Sans KR', sans-serif;
+  }
+
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-main);
+    background: var(--sp-bg);
+    color: var(--sp-text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Top Nav Bar (Spotify-style) ── */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--sp-border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+  }
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--sp-text);
+    letter-spacing: -0.5px;
+  }
+  .topbar-logo .dot {
+    width: 32px; height: 32px;
+    background: var(--sp-green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 900;
+  }
+  .topbar-nav {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .nav-btn {
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--font-main);
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    text-decoration: none;
+    color: var(--sp-text-sub);
+    background: transparent;
+  }
+  .nav-btn:hover { background: var(--sp-surface2); color: var(--sp-text); }
+  .nav-btn.active {
+    background: var(--sp-text);
+    color: white;
+  }
+  .nav-btn.green {
+    background: var(--sp-green);
+    color: white;
+  }
+  .nav-btn.green:hover { background: var(--sp-green-dark); }
+
+  /* ── Hero Section ── */
+  .hero {
+    background: var(--sp-white);
+    border-bottom: 1px solid var(--sp-border);
+    padding: 80px 40px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(29,185,84,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--sp-green-light);
+    color: var(--sp-green-dark);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero-badge .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--sp-green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  .hero-title {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    color: var(--sp-text);
+    margin-bottom: 16px;
+  }
+  .hero-title .green { color: var(--sp-green); }
+  .hero-subtitle {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--sp-text-sub);
+    max-width: 560px;
+    margin-bottom: 40px;
+    line-height: 1.5;
+  }
+  .hero-chips {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 48px;
+  }
+  .chip {
+    padding: 10px 20px;
+    border-radius: 100px;
+    border: 1.5px solid var(--sp-border);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sp-text-sub);
+    background: var(--sp-white);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chip .chip-icon { font-size: 15px; }
+
+  /* ── Stats Row ── */
+  .stats-row {
+    display: flex;
+    gap: 0;
+    background: var(--sp-white);
+    border: 1px solid var(--sp-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin: 0 auto;
+    max-width: 700px;
+    width: 100%;
+  }
+  .stat-item {
+    flex: 1;
+    padding: 24px 20px;
+    text-align: center;
+    border-right: 1px solid var(--sp-border);
+    position: relative;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--sp-green);
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--sp-text-muted);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Layout ── */
+  .page-layout {
+    display: flex;
+    max-width: 1280px;
+    margin: 0 auto;
+    gap: 0;
+    padding: 0;
+  }
+
+  /* ── Sidebar TOC ── */
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    background: var(--sp-white);
+    border-right: 1px solid var(--sp-border);
+    padding: 32px 0;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--sp-border); border-radius: 2px; }
+
+  .sidebar-section-label {
+    padding: 0 20px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--sp-text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+    text-decoration: none;
+    color: var(--sp-text-sub);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .toc-item:hover {
+    background: var(--sp-surface2);
+    color: var(--sp-text);
+    border-left-color: var(--sp-border);
+  }
+  .toc-item.active {
+    background: var(--sp-green-light);
+    color: var(--sp-green-dark);
+    border-left-color: var(--sp-green);
+    font-weight: 700;
+  }
+  .toc-num {
+    width: 22px; height: 22px;
+    background: var(--sp-surface2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .toc-item.active .toc-num {
+    background: var(--sp-green);
+    color: white;
+  }
+  .toc-time {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--sp-text-muted);
+    font-weight: 400;
+  }
+
+  /* ── Main Content ── */
+  .main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 40px 48px;
+    max-width: 900px;
+  }
+
+  /* ── Chapter Header ── */
+  .chapter {
+    margin-bottom: 64px;
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--sp-border);
+  }
+  .chapter-num {
+    width: 48px; height: 48px;
+    background: var(--sp-text);
+    color: white;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
+  .chapter-num.green { background: var(--sp-green); }
+  .chapter-info { flex: 1; }
+  .chapter-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--sp-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .chapter-title {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+  .chapter-time {
+    background: var(--sp-green-light);
+    color: var(--sp-green-dark);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ── Section Heading ── */
+  .section-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--sp-text);
+    margin: 32px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::before {
+    content: '';
+    width: 4px; height: 20px;
+    background: var(--sp-green);
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .sub-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--sp-text-sub);
+    margin: 20px 0 10px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--sp-white);
+    border: 1px solid var(--sp-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: var(--shadow-md); }
+
+  .card-green {
+    background: var(--sp-green-light);
+    border-color: rgba(29,185,84,0.3);
+  }
+  .card-orange {
+    background: var(--sp-orange-bg);
+    border-color: rgba(232,169,0,0.3);
+  }
+  .card-blue {
+    background: var(--sp-blue-bg);
+    border-color: rgba(45,70,185,0.25);
+  }
+  .card-red {
+    background: var(--sp-red-bg);
+    border-color: rgba(233,20,41,0.2);
+  }
+  .card-purple {
+    background: var(--sp-purple-bg);
+    border-color: rgba(125,60,152,0.2);
+  }
+  .card-dark {
+    background: var(--sp-text);
+    border-color: transparent;
+    color: white;
+  }
+
+  .card-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .label-green { color: var(--sp-green-dark); }
+  .label-orange { color: #b07800; }
+  .label-blue { color: var(--sp-blue); }
+  .label-red { color: var(--sp-red); }
+  .label-purple { color: var(--sp-purple); }
+  .label-white { color: rgba(255,255,255,0.7); }
+
+  /* ── Quote / highlight box ── */
+  .quote-box {
+    border-left: 4px solid var(--sp-green);
+    padding: 16px 20px;
+    background: var(--sp-green-light);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0d5c2a;
+    margin: 16px 0;
+    line-height: 1.5;
+  }
+
+  /* ── Table (Info) ── */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--sp-border);
+    font-size: 14px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 16px;
+  }
+  .info-table th {
+    background: var(--sp-text);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.2px;
+  }
+  .info-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--sp-border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table tr:nth-child(even) td { background: var(--sp-bg); }
+  .info-table .td-key {
+    font-weight: 700;
+    color: var(--sp-text);
+    width: 130px;
+    white-space: nowrap;
+    background: #F8F8F8 !important;
+    border-right: 1px solid var(--sp-border);
+    font-size: 13px;
+  }
+
+  /* ── Comparison table ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .compare-cell {
+    border-radius: var(--radius-md);
+    padding: 20px;
+    border: 1px solid var(--sp-border);
+  }
+  .compare-cell.bad {
+    background: var(--sp-red-bg);
+    border-color: rgba(233,20,41,0.2);
+  }
+  .compare-cell.good {
+    background: var(--sp-green-light);
+    border-color: rgba(29,185,84,0.3);
+  }
+  .compare-header {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .compare-cell.bad .compare-header { color: var(--sp-red); }
+  .compare-cell.good .compare-header { color: var(--sp-green-dark); }
+
+  /* ── Step flow ── */
+  .step-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 16px 0;
+  }
+  .step-item {
+    display: flex;
+    gap: 16px;
+    position: relative;
+    padding-bottom: 0;
+  }
+  .step-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .step-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--sp-text);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .step-circle.green { background: var(--sp-green); }
+  .step-line {
+    width: 2px;
+    flex: 1;
+    min-height: 24px;
+    background: var(--sp-border);
+    margin: 4px 0;
+  }
+  .step-content {
+    flex: 1;
+    padding: 4px 0 20px;
+  }
+  .step-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--sp-text);
+    margin-bottom: 4px;
+  }
+  .step-desc {
+    font-size: 13px;
+    color: var(--sp-text-sub);
+    line-height: 1.5;
+  }
+
+  /* ── STRO formula ── */
+  .stro-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .stro-card {
+    background: var(--sp-white);
+    border: 1.5px solid var(--sp-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    transition: all 0.15s;
+  }
+  .stro-card:hover {
+    border-color: var(--sp-green);
+    box-shadow: 0 0 0 3px rgba(29,185,84,0.1);
+  }
+  .stro-letter {
+    font-size: 40px;
+    font-weight: 900;
+    color: var(--sp-green);
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 6px;
+  }
+  .stro-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--sp-text);
+    margin-bottom: 4px;
+  }
+  .stro-example {
+    font-size: 12px;
+    color: var(--sp-text-sub);
+    line-height: 1.5;
+  }
+
+  /* ── Stat big cards ── */
+  .stat-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .stat-card {
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    border: 1px solid var(--sp-border);
+    text-align: center;
+  }
+  .stat-card-num {
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 8px;
+  }
+  .stat-card-desc {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .stat-card-src {
+    font-size: 11px;
+    margin-top: 6px;
+  }
+
+  /* ── Case study (사례) ── */
+  .case-block {
+    background: var(--sp-white);
+    border: 1px solid var(--sp-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-sm);
+  }
+  .case-header {
+    background: var(--sp-text);
+    color: white;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .case-num-badge {
+    width: 40px; height: 40px;
+    background: var(--sp-green);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    font-weight: 900;
+    color: white;
+    flex-shrink: 0;
+  }
+  .case-title-text { font-size: 18px; font-weight: 800; }
+  .case-subtitle-text { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+  .case-body { padding: 28px; }
+
+  /* ── Prompt display ── */
+  .prompt-box {
+    background: #F8FFF9;
+    border: 1.5px solid rgba(29,185,84,0.35);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--sp-text);
+    margin: 8px 0;
+    position: relative;
+  }
+  .prompt-box::before {
+    content: '💬';
+    position: absolute;
+    top: -12px; left: 16px;
+    background: white;
+    padding: 0 6px;
+    font-size: 16px;
+  }
+  .ai-prompt-box {
+    background: var(--sp-text);
+    color: white;
+    border-radius: var(--radius-md);
+    padding: 20px;
+    font-size: 13.5px;
+    line-height: 1.8;
+    position: relative;
+  }
+  .ai-prompt-box::before {
+    content: '🤖 AI 생성 프롬프트';
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--sp-green);
+    margin-bottom: 12px;
+  }
+  .ai-prompt-box .highlight { color: var(--sp-green); font-weight: 700; }
+
+  /* ── Effect list ── */
+  .effect-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 8px 0;
+  }
+  .effect-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--sp-text);
+  }
+  .effect-list li::before {
+    content: '✓';
+    color: var(--sp-green);
+    font-weight: 900;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── Check list ── */
+  .check-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    border: 1px solid var(--sp-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .check-table th {
+    background: var(--sp-text);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .check-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--sp-border);
+    vertical-align: middle;
+  }
+  .check-table tr:last-child td { border-bottom: none; }
+  .check-table tr:nth-child(even) td { background: var(--sp-bg); }
+  .badge-importance {
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge-high { background: var(--sp-red-bg); color: var(--sp-red); }
+  .badge-vhigh { background: #FFF0F0; color: #B71C1C; border: 1px solid rgba(183,28,28,0.2); }
+  .badge-mid { background: var(--sp-orange-bg); color: #8a6000; }
+
+  /* ── Level table ── */
+  .level-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .level-card {
+    border-radius: var(--radius-md);
+    padding: 16px 12px;
+    border: 1.5px solid var(--sp-border);
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .level-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .level-card.l1 { border-color: #BDBDBD; }
+  .level-card.l2 { border-color: var(--sp-blue); background: var(--sp-blue-bg); }
+  .level-card.l3 { border-color: var(--sp-green); background: var(--sp-green-light); }
+  .level-card.l4 { border-color: var(--sp-orange); background: var(--sp-orange-bg); }
+  .level-card.l5 { border-color: var(--sp-purple); background: var(--sp-purple-bg); }
+  .level-num {
+    font-size: 22px; font-weight: 900;
+    margin-bottom: 6px;
+  }
+  .level-card.l1 .level-num { color: #757575; }
+  .level-card.l2 .level-num { color: var(--sp-blue); }
+  .level-card.l3 .level-num { color: var(--sp-green-dark); }
+  .level-card.l4 .level-num { color: var(--sp-orange); }
+  .level-card.l5 .level-num { color: var(--sp-purple); }
+  .level-name { font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+  .level-feat { font-size: 11px; color: var(--sp-text-sub); line-height: 1.4; }
+
+  /* ── Tool compare table ── */
+  .tool-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    border: 1px solid var(--sp-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .tool-table th {
+    background: var(--sp-text);
+    color: white;
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .tool-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--sp-border);
+    vertical-align: middle;
+  }
+  .tool-table tr:last-child td { border-bottom: none; }
+  .tool-table tr:nth-child(even) td { background: var(--sp-bg); }
+  .tool-name {
+    font-weight: 800;
+    color: var(--sp-green-dark);
+    font-size: 14px;
+  }
+  .free-badge {
+    display: inline-block;
+    background: var(--sp-green-light);
+    color: var(--sp-green-dark);
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* ── Worksheet ── */
+  .worksheet {
+    background: var(--sp-white);
+    border: 2px dashed var(--sp-green);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    margin: 16px 0;
+  }
+  .worksheet-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--sp-green-dark);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ws-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 0;
+    border: 1px solid var(--sp-border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .ws-label {
+    background: var(--sp-bg);
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sp-text-sub);
+    border-right: 1px solid var(--sp-border);
+    display: flex;
+    align-items: center;
+  }
+  .ws-input {
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--sp-text-muted);
+    font-style: italic;
+  }
+
+  /* ── Action items ── */
+  .action-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .action-card {
+    background: var(--sp-white);
+    border: 1px solid var(--sp-border);
+    border-radius: var(--radius-md);
+    padding: 20px 16px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .action-day {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--sp-text-muted);
+    margin-bottom: 8px;
+  }
+  .action-icon { font-size: 28px; margin-bottom: 8px; }
+  .action-text { font-size: 13px; color: var(--sp-text-sub); line-height: 1.4; }
+
+  /* ── Footer ── */
+  .footer {
+    background: var(--sp-text);
+    color: white;
+    padding: 48px;
+    text-align: center;
+    margin-top: 80px;
+  }
+  .footer-logo { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+  .footer-logo span { color: var(--sp-green); }
+  .footer-sub { font-size: 14px; color: rgba(255,255,255,0.5); }
+
+  /* ── Utility ── */
+  .text-green { color: var(--sp-green-dark); }
+  .text-orange { color: #b07800; }
+  .text-blue { color: var(--sp-blue); }
+  .text-red { color: var(--sp-red); }
+  .text-purple { color: var(--sp-purple); }
+  .text-muted { color: var(--sp-text-muted); }
+  .text-sub { color: var(--sp-text-sub); }
+  .fw-9 { font-weight: 900; }
+  .fw-7 { font-weight: 700; }
+  .fs-sm { font-size: 13px; }
+  .fs-xs { font-size: 12px; }
+  .mb-4 { margin-bottom: 4px; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-12 { margin-bottom: 12px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+  p { font-size: 14px; color: var(--sp-text-sub); line-height: 1.7; margin-bottom: 12px; }
+  strong { color: var(--sp-text); font-weight: 700; }
+
+  /* ── 모바일 하단 탭바 기본: 데스크탑에서 숨김 ── */
+  .mobile-bottom-nav { display: none; }
+
+  /* ══ Tablet ≤900px ══ */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main-content { padding: 20px 16px; max-width: 100%; }
+    .hero { padding: 40px 16px 32px; }
+    .stro-grid { grid-template-columns: 1fr 1fr; }
+    .level-grid { grid-template-columns: repeat(3, 1fr); }
+    .stat-cards { grid-template-columns: 1fr 1fr; }
+    .action-grid { grid-template-columns: 1fr; }
+    .effect-list { grid-template-columns: 1fr; }
+    .topbar { padding: 0 16px; height: 52px; }
+    .topbar-nav { display: none; }
+    .topbar-logo { font-size: 15px; }
+  }
+
+  /* ══ Mobile ≤600px ══ */
+  @media (max-width: 600px) {
+    body { padding-bottom: 76px; }
+
+    /* 상단바 */
+    .topbar { height: 50px; padding: 0 14px; }
+    .topbar-logo { font-size: 14px; gap: 7px; }
+    .topbar-logo .dot { width: 26px; height: 26px; font-size: 11px; }
+
+    /* 하단 탭 네비게이션 */
+    .mobile-bottom-nav {
+      display: flex !important;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 200;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1.5px solid var(--sp-border);
+      padding: 6px 2px 10px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+      justify-content: space-around;
+      align-items: center;
+    }
+    .mob-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 2px;
+      text-decoration: none;
+      color: var(--sp-text-muted);
+      flex: 1;
+      transition: color 0.15s;
+    }
+    .mob-tab.active { color: var(--sp-green); }
+    .mob-tab-icon { font-size: 17px; line-height: 1; }
+    .mob-tab-label { font-size: 9px; font-weight: 700; }
+
+    /* 히어로 */
+    .hero { padding: 24px 14px 20px; }
+    .hero-badge { font-size: 11px; padding: 5px 12px; margin-bottom: 14px; }
+    .hero-title { font-size: 28px !important; letter-spacing: -0.8px; word-break: keep-all; margin-bottom: 10px; }
+    .hero-subtitle { font-size: 13px !important; margin-bottom: 20px; word-break: keep-all; }
+    .hero-chips { gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+    .chip { padding: 6px 12px; font-size: 12px; }
+
+    /* 통계 바: 2×2 그리드 */
+    .stats-row { display: grid !important; grid-template-columns: 1fr 1fr; max-width: 100%; border-radius: var(--radius-lg); }
+    .stat-item { border-right: 1px solid var(--sp-border); border-bottom: 1px solid var(--sp-border); padding: 14px 8px; }
+    .stat-item:nth-child(2) { border-right: none; }
+    .stat-item:nth-child(3) { border-bottom: none; }
+    .stat-item:nth-child(4) { border-right: none; border-bottom: none; }
+    .stat-num { font-size: 24px; }
+    .stat-label { font-size: 9px; }
+
+    /* 레이아웃 */
+    .page-layout { flex-direction: column; }
+    .main-content { padding: 14px 12px; }
+
+    /* 챕터 헤더 */
+    .chapter { margin-bottom: 36px; }
+    .chapter-header { gap: 10px; margin-bottom: 16px; padding-bottom: 14px; }
+    .chapter-num { width: 38px; height: 38px; font-size: 13px; border-radius: 9px; }
+    .chapter-title { font-size: 18px; }
+    .chapter-time { font-size: 10px; padding: 3px 9px; margin-left: auto; }
+
+    /* 섹션 제목 */
+    .section-title { font-size: 15px; margin: 20px 0 10px; }
+    .sub-title { font-size: 13px; margin: 14px 0 7px; }
+
+    /* 카드 */
+    .card { padding: 14px; border-radius: 12px; }
+
+    /* 통계 카드 */
+    .stat-cards { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-card { padding: 14px 10px; border-radius: 12px; }
+    .stat-card-num { font-size: 32px; letter-spacing: -1px; margin-bottom: 6px; }
+    .stat-card-desc { font-size: 11px; }
+    .stat-card-src { font-size: 10px; }
+
+    /* 비교 그리드 */
+    .compare-grid { grid-template-columns: 1fr; gap: 7px; }
+
+    /* STRO */
+    .stro-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stro-card { padding: 12px 11px; }
+    .stro-letter { font-size: 28px; margin-bottom: 4px; }
+    .stro-name { font-size: 11px; margin-bottom: 3px; }
+    .stro-example { font-size: 10px; }
+
+    /* 사례 블록 */
+    .case-block { border-radius: 16px; margin-bottom: 20px; }
+    .case-header { padding: 14px 16px; gap: 10px; }
+    .case-num-badge { width: 32px; height: 32px; font-size: 14px; border-radius: 7px; }
+    .case-title-text { font-size: 14px; }
+    .case-subtitle-text { font-size: 11px; }
+    .case-body { padding: 16px 12px; }
+
+    /* 프롬프트 */
+    .prompt-box { font-size: 12.5px; padding: 16px 12px; }
+    .ai-prompt-box { font-size: 12px; padding: 16px 12px; line-height: 1.7; }
+    .ai-prompt-box::before { font-size: 9px; margin-bottom: 10px; }
+
+    /* 효과 리스트 */
+    .effect-list { grid-template-columns: 1fr; gap: 7px; }
+    .effect-list li { font-size: 12px; }
+
+    /* 테이블 */
+    .info-table { font-size: 12px; }
+    .info-table th { padding: 9px 10px; font-size: 11px; }
+    .info-table td { padding: 9px 10px; }
+    .info-table .td-key { width: 72px; font-size: 11px; white-space: normal; }
+
+    /* 체크리스트 */
+    .check-table { font-size: 11px; }
+    .check-table th, .check-table td { padding: 9px 8px; }
+    .badge-importance { font-size: 10px; padding: 2px 7px; }
+
+    /* 레벨 그리드 */
+    .level-grid { grid-template-columns: repeat(2, 1fr); gap: 7px; }
+    .level-card { padding: 12px 9px; border-radius: 10px; }
+    .level-num { font-size: 17px; }
+    .level-name { font-size: 11px; }
+    .level-feat { font-size: 10px; }
+
+    /* 액션 카드 */
+    .action-grid { grid-template-columns: 1fr; gap: 8px; }
+    .action-card { display: flex; align-items: center; gap: 14px; padding: 12px 14px; text-align: left; }
+    .action-icon { font-size: 22px; flex-shrink: 0; margin-bottom: 0; }
+    .action-day { margin-bottom: 2px; }
+
+    /* 도구 테이블 */
+    .tool-table .hide-mobile { display: none; }
+    .tool-table { font-size: 11px; }
+    .tool-table th, .tool-table td { padding: 9px 7px; }
+    .tool-name { font-size: 12px; }
+    .free-badge { font-size: 10px; padding: 2px 5px; }
+
+    /* 워크시트 */
+    .worksheet { padding: 16px 12px; border-radius: 12px; }
+    .worksheet-title { font-size: 13px; margin-bottom: 12px; }
+    .ws-row { grid-template-columns: 68px 1fr; }
+    .ws-label { font-size: 11px; padding: 9px 7px; }
+    .ws-input { font-size: 11px; padding: 9px 7px; }
+
+    /* 인용 박스 */
+    .quote-box { font-size: 13px; padding: 12px 14px; }
+
+    /* 본문 */
+    p { font-size: 13px; }
+
+    /* 아이스브레이킹 그리드 */
+    .ice-grid { grid-template-columns: 1fr !important; gap: 6px !important; }
+
+    /* 푸터 */
+    .footer { padding: 32px 16px; }
+    .footer-logo { font-size: 22px; }
+    .footer-sub { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top Nav ── -->
+<nav class="topbar">
+  <div class="topbar-logo">
+    <div class="dot">AI</div>
+    AI닷 강의교안
+  </div>
+  <div class="topbar-nav">
+    <a href="#ch0" class="nav-btn">도입</a>
+    <a href="#ch1" class="nav-btn">1장</a>
+    <a href="#ch2" class="nav-btn">2장</a>
+    <a href="#ch3" class="nav-btn">3장</a>
+    <a href="#ch4" class="nav-btn">4장</a>
+    <a href="#ch5" class="nav-btn">5장</a>
+    <a href="#ch6" class="nav-btn">6장</a>
+    <a href="#appendix" class="nav-btn green">부록</a>
+  </div>
+  <!-- 모바일: 현재 챕터 표시 배지 -->
+  <div id="mobile-chapter-badge" style="display:none; align-items:center; gap:6px; font-size:13px; font-weight:800; color:var(--sp-text);">
+    <span id="mobile-chapter-text">도입</span>
+  </div>
+</nav>
+
+<!-- ── 모바일 하단 탭 네비게이션 ── -->
+<nav class="mobile-bottom-nav">
+  <a href="#ch0" class="mob-tab" data-section="ch0">
+    <span class="mob-tab-icon">🎯</span>
+    <span class="mob-tab-label">도입</span>
+  </a>
+  <a href="#ch1" class="mob-tab" data-section="ch1">
+    <span class="mob-tab-icon">📊</span>
+    <span class="mob-tab-label">1장</span>
+  </a>
+  <a href="#ch2" class="mob-tab" data-section="ch2">
+    <span class="mob-tab-icon">💡</span>
+    <span class="mob-tab-label">2장</span>
+  </a>
+  <a href="#ch3" class="mob-tab" data-section="ch3">
+    <span class="mob-tab-icon">🔢</span>
+    <span class="mob-tab-label">3장</span>
+  </a>
+  <a href="#ch4" class="mob-tab" data-section="ch4">
+    <span class="mob-tab-icon">📁</span>
+    <span class="mob-tab-label">사례</span>
+  </a>
+  <a href="#ch5" class="mob-tab" data-section="ch5">
+    <span class="mob-tab-icon">✏️</span>
+    <span class="mob-tab-label">실습</span>
+  </a>
+  <a href="#ch6" class="mob-tab" data-section="ch6">
+    <span class="mob-tab-icon">✅</span>
+    <span class="mob-tab-label">검증</span>
+  </a>
+  <a href="#appendix" class="mob-tab" data-section="appendix">
+    <span class="mob-tab-icon">📎</span>
+    <span class="mob-tab-label">부록</span>
+  </a>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    AI닷 (AI DOT) · 2시간 집중 과정
+  </div>
+  <h1 class="hero-title">
+    AI 문제해결 <span class="green">실무</span> 강의교안
+  </h1>
+  <p class="hero-subtitle">
+    프롬프트를 외우지 말고, <strong>문제를 설명하라</strong><br>
+    AI 시대의 핵심 역량은 질문 기술이 아니라 '문제 정의 능력'이다
+  </p>
+  <div class="hero-chips">
+    <div class="chip"><span class="chip-icon">🏢</span> 직장인</div>
+    <div class="chip"><span class="chip-icon">🏛️</span> 공공기관</div>
+    <div class="chip"><span class="chip-icon">👥</span> 일반인</div>
+    <div class="chip"><span class="chip-icon">⏱️</span> 2시간</div>
+    <div class="chip"><span class="chip-icon">💻</span> 강의 + 실습</div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-num">78%</div>
+      <div class="stat-label">기업 AI 채용 우대</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">73%</div>
+      <div class="stat-label">AI교육이 이직 영향</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">80%</div>
+      <div class="stat-label">2026 AI 활용 전망</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">5</div>
+      <div class="stat-label">문제해결 단계</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Page Layout ── -->
+<div class="page-layout">
+
+  <!-- Sidebar TOC -->
+  <aside class="sidebar">
+    <div class="sidebar-section-label">강의 목차</div>
+    <a href="#ch0" class="toc-item">
+      <div class="toc-num">0</div>
+      강사소개 & 아이스브레이킹
+      <span class="toc-time">20분</span>
+    </a>
+    <a href="#ch1" class="toc-item">
+      <div class="toc-num">1</div>
+      AI 시대 기업 평가 기준
+      <span class="toc-time">15분</span>
+    </a>
+    <a href="#ch2" class="toc-item">
+      <div class="toc-num">2</div>
+      프롬프트 암기 불필요
+      <span class="toc-time">15분</span>
+    </a>
+    <a href="#ch3" class="toc-item">
+      <div class="toc-num">3</div>
+      5단계 프레임워크
+      <span class="toc-time">20분</span>
+    </a>
+    <a href="#ch4" class="toc-item">
+      <div class="toc-num">4</div>
+      실전 사례 3가지
+      <span class="toc-time">25분</span>
+    </a>
+    <a href="#ch5" class="toc-item">
+      <div class="toc-num">5</div>
+      문제 정의 공식 & 실습
+      <span class="toc-time">25분</span>
+    </a>
+    <a href="#ch6" class="toc-item">
+      <div class="toc-num">6</div>
+      AI 답변 검증 & 윤리
+      <span class="toc-time">15분</span>
+    </a>
+    <a href="#ch7" class="toc-item">
+      <div class="toc-num">7</div>
+      앞으로의 AI 전략
+      <span class="toc-time">10분</span>
+    </a>
+    <a href="#appendix" class="toc-item">
+      <div class="toc-num">✦</div>
+      부록 & 워크시트
+      <span class="toc-time">-</span>
+    </a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ── CH0 강사소개 ── -->
+    <section class="chapter" id="ch0">
+      <div class="chapter-header">
+        <div class="chapter-num green">0</div>
+        <div class="chapter-info">
+          <div class="chapter-label">Opening</div>
+          <div class="chapter-title">강사 소개 & 아이스브레이킹</div>
+        </div>
+        <div class="chapter-time">20분</div>
+      </div>
+
+      <div class="card card-blue">
+        <div class="card-label label-blue">📋 이 시간에 다룰 내용</div>
+        <ul style="padding-left:16px; font-size:14px; color:var(--sp-text-sub); line-height:2;">
+          <li>강사 소개 및 AI닷(AI DOT) 브랜드 소개</li>
+          <li>참가자 현황 파악 (업종, 직무, AI 사용 경험)</li>
+          <li>오늘 교육 목표 및 진행 방식 안내</li>
+          <li>아이스브레이킹: 'AI와 나의 현재' 손 들기 퀴즈</li>
+        </ul>
+      </div>
+
+      <div class="section-title">아이스브레이킹 활동</div>
+      <div class="card card-orange">
+        <div class="card-label label-orange">🙋 활동 — AI와 나의 현재 관계는?</div>
+        <p style="margin-bottom:14px;">다음 중 본인과 가장 가까운 것을 손 들어 보세요.</p>
+        <div class="ice-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div style="background:white; border:1px solid var(--sp-border); border-radius:8px; padding:14px; font-size:13px; font-weight:600;">
+            🅐 &nbsp;AI를 전혀 써본 적 없다
+          </div>
+          <div style="background:white; border:1px solid var(--sp-border); border-radius:8px; padding:14px; font-size:13px; font-weight:600;">
+            🅑 &nbsp;ChatGPT는 알지만 거의 안 쓴다
+          </div>
+          <div style="background:white; border:1px solid var(--sp-border); border-radius:8px; padding:14px; font-size:13px; font-weight:600;">
+            🅒 &nbsp;가끔 써보는데 잘 모르겠다
+          </div>
+          <div style="background:white; border:1px solid var(--sp-border); border-radius:8px; padding:14px; font-size:13px; font-weight:600;">
+            🅓 &nbsp;업무에 활발히 활용하고 있다
+          </div>
+        </div>
+        <p style="margin-top:14px; font-size:12px; color:#8a6000;">→ 강사 관찰 포인트: 청중의 AI 경험 수준을 파악하여 강의 깊이를 실시간으로 조율합니다.</p>
+      </div>
+    </section>
+
+    <!-- ── CH1 기업 평가 ── -->
+    <section class="chapter" id="ch1">
+      <div class="chapter-header">
+        <div class="chapter-num">1</div>
+        <div class="chapter-info">
+          <div class="chapter-label">Chapter 1</div>
+          <div class="chapter-title">AI 시대, 기업은 무엇을 평가하는가?</div>
+        </div>
+        <div class="chapter-time">15분</div>
+      </div>
+
+      <div class="section-title">최신 데이터로 보는 현실</div>
+
+      <div class="stat-cards">
+        <div class="stat-card" style="background:var(--sp-green-light); border-color:rgba(29,185,84,0.3);">
+          <div class="stat-card-num text-green">78%</div>
+          <div class="stat-card-desc fw-7">기업이 AI 활용 역량을<br>채용 우대 요건으로 고려</div>
+          <div class="stat-card-src text-muted">한국경영자총협회, 2025</div>
+        </div>
+        <div class="stat-card" style="background:var(--sp-blue-bg); border-color:rgba(45,70,185,0.25);">
+          <div class="stat-card-num text-blue">73%</div>
+          <div class="stat-card-desc fw-7">직장인이 AI 교육 기회가<br>이직 결정에 영향 미친다고 응답</div>
+          <div class="stat-card-src text-muted">잡코리아, 2025 · 직장인 1,200명</div>
+        </div>
+        <div class="stat-card" style="background:var(--sp-orange-bg); border-color:rgba(232,169,0,0.3);">
+          <div class="stat-card-num text-orange">80%+</div>
+          <div class="stat-card-desc fw-7">2026년까지 직장인 80% 이상이<br>업무에 생성형 AI를 활용 전망</div>
+          <div class="stat-card-src text-muted">Gartner, 2025 전망</div>
+        </div>
+        <div class="stat-card" style="background:var(--sp-purple-bg); border-color:rgba(125,60,152,0.2);">
+          <div class="stat-card-num text-purple">65%</div>
+          <div class="stat-card-desc fw-7">경영진의 65%가 생성형 AI<br>혁신 전문 지식 부족 인정</div>
+          <div class="stat-card-src text-muted">Accenture 설문, 2025</div>
+        </div>
+      </div>
+
+      <div class="section-title">과거 vs 현재 — 기업이 원하는 역량 변화</div>
+      <table class="info-table">
+        <thead><tr><th>과거 (2010~2020년대 초)</th><th>현재 (2025년~)</th></tr></thead>
+        <tbody>
+          <tr><td>컴퓨터 기본 활용 능력</td><td><strong>문제 해결 능력 + AI 활용</strong></td></tr>
+          <tr><td>엑셀/워드 문서 작성</td><td><strong>AI 기반 데이터 해석 능력</strong></td></tr>
+          <tr><td>정보 검색 능력</td><td><strong>AI와의 협업 능력</strong></td></tr>
+          <tr><td>업무 프로세스 숙지</td><td><strong>보고서 자동화 & 의사결정</strong></td></tr>
+          <tr><td>외국어 능력</td><td><strong>AI를 통한 다국어 업무 처리</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="quote-box">
+        💡 &nbsp;"ChatGPT를 <strong>사용하는 사람</strong>"과 "ChatGPT로 <strong>문제를 해결하는 사람</strong>" 사이에는 거대한 차이가 있습니다.
+        도구를 아는 것과 도구로 결과를 만드는 것은 완전히 다른 역량입니다.
+      </div>
+    </section>
+
+    <!-- ── CH2 프롬프트 불필요 ── -->
+    <section class="chapter" id="ch2">
+      <div class="chapter-header">
+        <div class="chapter-num">2</div>
+        <div class="chapter-info">
+          <div class="chapter-label">Chapter 2</div>
+          <div class="chapter-title">왜 프롬프트를 외울 필요가 없는가?</div>
+        </div>
+        <div class="chapter-time">15분</div>
+      </div>
+
+      <div class="card" style="text-align:center; padding:32px;">
+        <p style="font-size:13px; color:var(--sp-text-muted); margin-bottom:8px;">가장 많이 받는 질문</p>
+        <p style="font-size:22px; font-weight:900; color:var(--sp-text); line-height:1.3; margin-bottom:0;">"프롬프트를 어떻게 잘 써야 하나요?"</p>
+      </div>
+
+      <div class="card card-green" style="text-align:center; padding:32px; margin-top:12px;">
+        <p style="font-size:26px; font-weight:900; color:var(--sp-green-dark); margin-bottom:8px;">프롬프트를 외울 필요 없습니다.</p>
+        <p style="font-size:15px; color:var(--sp-text-sub); margin:0;">AI가 프롬프트를 만들어 주기 때문입니다.</p>
+      </div>
+
+      <div class="section-title">기존 방식 vs AI닷 방식</div>
+      <div class="compare-grid">
+        <div class="compare-cell bad">
+          <div class="compare-header">❌ 기존 방식 (어려운 방법)</div>
+          <p style="font-size:13px; margin:0; line-height:1.8;">
+            사람이 프롬프트를 공부하고<br>외운 후 직접 작성<br>
+            <span style="color:var(--sp-red); font-weight:700;">→ 시간 소요, 잊어버림, 어려움</span>
+          </p>
+        </div>
+        <div class="compare-cell good">
+          <div class="compare-header">✅ AI닷 방식 (쉬운 방법)</div>
+          <p style="font-size:13px; margin:0; line-height:1.8;">
+            내 문제를 AI에게 설명하고<br>프롬프트 생성을 요청<br>
+            <span style="color:var(--sp-green-dark); font-weight:700;">→ 즉시 활용, 반복 가능, 쉬움</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="section-title">실제 입력 예시</div>
+
+      <div class="sub-title">❌ 잘못된 접근</div>
+      <div class="card card-red">
+        <div class="card-label label-red">사용자 입력</div>
+        <p style="font-size:16px; font-weight:700; color:var(--sp-text); margin-bottom:8px;">"회의록 만들어줘"</p>
+        <p style="font-size:13px; color:var(--sp-red); margin:0;">→ 문제: 너무 모호해서 AI가 어떤 회의록을 원하는지 알 수 없음</p>
+      </div>
+
+      <div class="sub-title">✅ 올바른 접근 — AI닷 방식 (3단계)</div>
+      <div class="step-flow">
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-circle green">1</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">문제 설명</div>
+            <div class="step-desc">"저는 팀장인데 매주 월요일 오전 팀 회의 후 회의록을 작성하는데 30분 이상 걸립니다."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-circle green">2</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">프롬프트 생성 요청</div>
+            <div class="step-desc">"이 상황을 해결할 고급 회의록 자동화 프롬프트를 만들어 주세요."</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-circle green">3</div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">AI가 전문 프롬프트 생성</div>
+            <div class="step-desc">→ AI가 상황에 맞는 최적의 프롬프트를 자동으로 완성합니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-purple">
+        <div class="card-label label-purple">🎯 강사 실습 포인트</div>
+        <p style="font-size:14px; color:var(--sp-text); margin-bottom:8px;">지금 바로 ChatGPT나 Claude를 열고 다음을 입력해 보세요:</p>
+        <div style="background:white; border-radius:8px; padding:14px; font-size:14px; font-weight:700; color:var(--sp-purple);">
+          "나는 [내 직업]이고, [내 문제]가 있습니다. 이 문제를 해결할 프롬프트를 만들어 주세요."
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CH3 5단계 프레임워크 ── -->
+    <section class="chapter" id="ch3">
+      <div class="chapter-header">
+        <div class="chapter-num">3</div>
+        <div class="chapter-info">
+          <div class="chapter-label">Chapter 3</div>
+          <div class="chapter-title">AI 문제해결 5단계 프레임워크</div>
+        </div>
+        <div class="chapter-time">20분</div>
+      </div>
+
+      <div class="section-title">전체 구조 한눈에 보기</div>
+      <table class="info-table">
+        <thead>
+          <tr>
+            <th style="width:100px;">단계</th>
+            <th>내용</th>
+            <th>핵심 질문</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span style="background:var(--sp-green); color:white; padding:4px 10px; border-radius:100px; font-size:12px; font-weight:800;">STEP 1</span></td>
+            <td><strong>문제 발견</strong></td>
+            <td class="text-sub fs-sm">어떤 업무에서 불편함/비효율이 있는가?</td>
+          </tr>
+          <tr>
+            <td><span style="background:var(--sp-text); color:white; padding:4px 10px; border-radius:100px; font-size:12px; font-weight:800;">STEP 2</span></td>
+            <td><strong>문제 상세 설명</strong></td>
+            <td class="text-sub fs-sm">언제, 누가, 어떤 상황에서, 얼마나 걸리는가?</td>
+          </tr>
+          <tr>
+            <td><span style="background:var(--sp-green); color:white; padding:4px 10px; border-radius:100px; font-size:12px; font-weight:800;">STEP 3</span></td>
+            <td><strong>프롬프트 제작 요청</strong></td>
+            <td class="text-sub fs-sm">이 문제를 해결할 프롬프트를 만들어 주세요</td>
+          </tr>
+          <tr>
+            <td><span style="background:var(--sp-text); color:white; padding:4px 10px; border-radius:100px; font-size:12px; font-weight:800;">STEP 4</span></td>
+            <td><strong>AI 결과 생성 및 확인</strong></td>
+            <td class="text-sub fs-sm">AI가 만든 결과가 내 상황에 맞는가?</td>
+          </tr>
+          <tr>
+            <td><span style="background:var(--sp-green); color:white; padding:4px 10px; border-radius:100px; font-size:12px; font-weight:800;">STEP 5</span></td>
+            <td><strong>검토 → 수정 → 최종 활용</strong></td>
+            <td class="text-sub fs-sm">사실 확인, 보완, 실무 적용</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">STEP 2 — 문제 상세 설명 공식 (STRO)</div>
+      <div class="stro-grid">
+        <div class="stro-card">
+          <div class="stro-letter">S</div>
+          <div class="stro-name">Situation (상황)</div>
+          <div class="stro-example">나는 [직업/직급]이고, [업무 환경]에서 일합니다</div>
+        </div>
+        <div class="stro-card">
+          <div class="stro-letter">T</div>
+          <div class="stro-name">Task & Time (과제/시간)</div>
+          <div class="stro-example">[어떤 작업]을 [얼마나 자주/오래] 하고 있습니다</div>
+        </div>
+        <div class="stro-card">
+          <div class="stro-letter">R</div>
+          <div class="stro-name">Result (원하는 결과)</div>
+          <div class="stro-example">[어떤 결과물]이 필요합니다</div>
+        </div>
+        <div class="stro-card">
+          <div class="stro-letter">O</div>
+          <div class="stro-name">Output Format (출력 형식)</div>
+          <div class="stro-example">[표/문서/요약/리스트] 형태로 출력해 주세요</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CH4 실전 사례 ── -->
+    <section class="chapter" id="ch4">
+      <div class="chapter-header">
+        <div class="chapter-num green">4</div>
+        <div class="chapter-info">
+          <div class="chapter-label">Chapter 4</div>
+          <div class="chapter-title">실전 사례 심층 분석 3가지</div>
+        </div>
+        <div class="chapter-time">25분 · 사례당 약 8분</div>
+      </div>
+
+      <!-- 사례 1 -->
+      <div class="case-block">
+        <div class="case-header">
+          <div class="case-num-badge">1</div>
+          <div>
+            <div class="case-title-text">회의록 자동화</div>
+            <div class="case-subtitle-text">팀장 · 직장인 · 주 3회 회의</div>
+          </div>
+        </div>
+        <div class="case-body">
+          <table class="info-table mb-16">
+            <tbody>
+              <tr><td class="td-key">업무 상황</td><td>팀장급 직원 / 매주 3회 팀 회의 / 회의 후 회의록 작성</td></tr>
+              <tr><td class="td-key">기존 문제</td><td>회의 내용을 수기로 정리 → 1회당 30~40분 소요 / 주 3회 = 주당 최소 90분 낭비</td></tr>
+              <tr><td class="td-key">목표</td><td>회의록 작성 시간을 5분 이내로 단축</td></tr>
+              <tr><td class="td-key">적용 AI</td><td>ChatGPT, Claude, Google Gemini 중 선택</td></tr>
+            </tbody>
+          </table>
+
+          <div class="sub-title">① 사용자가 AI에게 입력하는 문장 (STRO 공식 적용)</div>
+          <div class="prompt-box">
+            "저는 IT 회사의 개발팀 팀장입니다. 매주 월/수/금 오전 9시에 팀 전체 회의가 있는데, 회의 후 회의록 작성에 30~40분이 걸립니다. 회의 내용을 텍스트로 붙여넣으면 자동으로 회의록을 만들어주는 프롬프트를 작성해 주세요. 결과물은 <strong>표 형태</strong>로 회의 목적, 논의 사항, 결정 사항, 담당자, 마감일이 포함되어야 합니다."
+          </div>
+
+          <div class="sub-title" style="margin-top:20px;">② AI가 자동 생성하는 회의록 프롬프트</div>
+          <div class="ai-prompt-box">
+            <span class="highlight">당신은 전문 비서입니다.</span><br><br>
+            제공된 회의 내용을 분석하여 아래 형식의 회의록을 표 형태로 작성하세요.<br><br>
+            1. 회의 일시 및 참석자<br>
+            2. 회의 목적<br>
+            3. 주요 논의사항 (번호 순)<br>
+            4. 결정사항<br>
+            5. <span class="highlight">Action Item (담당자 + 마감일)</span><br>
+            6. 다음 회의 예정 안건
+          </div>
+
+          <div class="sub-title" style="margin-top:20px;">③ 기대 효과</div>
+          <div class="card card-orange" style="padding:20px;">
+            <ul class="effect-list">
+              <li>시간 절감: 주 90분 → 주 15분 (약 83% 절감)</li>
+              <li>연간 환산: 약 78시간 절감 (약 2주 근무 시간)</li>
+              <li>품질 향상: 누락 없는 일관된 회의록 형식</li>
+              <li>팀원 공유: 즉시 이메일/슬랙 공유 가능</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 사례 2 -->
+      <div class="case-block">
+        <div class="case-header">
+          <div class="case-num-badge">2</div>
+          <div>
+            <div class="case-title-text">매출 감소 원인 분석 보고서</div>
+            <div class="case-subtitle-text">중소기업 영업관리자 · 임원 보고용</div>
+          </div>
+        </div>
+        <div class="case-body">
+          <table class="info-table mb-16">
+            <tbody>
+              <tr><td class="td-key">업무 상황</td><td>중소기업 영업관리자 / 월별 매출 데이터 보유</td></tr>
+              <tr><td class="td-key">기존 문제</td><td>매출 감소 원인 분석 + 보고서 작성 = 반나절 이상 소요</td></tr>
+              <tr><td class="td-key">데이터 현황</td><td>1월 1,500만원 → 2월 1,300만원 → 3월 1,100만원 (3개월 연속 감소)</td></tr>
+              <tr><td class="td-key">목표</td><td>임원 보고용 분석 보고서를 30분 내에 완성</td></tr>
+              <tr><td class="td-key">적용 AI</td><td>ChatGPT, Claude, Google Gemini 중 선택</td></tr>
+            </tbody>
+          </table>
+
+          <div class="sub-title">① 사용자가 AI에게 입력하는 문장 (STRO 공식 적용)</div>
+          <div class="prompt-box">
+            "저는 중소기업 영업팀 관리자입니다. 최근 3개월(1월 1,500만원 → 2월 1,300만원 → 3월 1,100만원)간 매출이 연속 감소하고 있습니다. 이 데이터를 바탕으로 매출 감소 원인을 분석하고 임원 보고용 보고서를 만들어주는 프롬프트를 작성해 주세요. 결과물은 <strong>현황 요약, 원인 분석, 개선 방안, 기대 효과 순서</strong>로 표 형태로 출력해 주세요."
+          </div>
+
+          <div class="sub-title" style="margin-top:20px;">② AI가 자동 생성하는 매출 분석 프롬프트</div>
+          <div class="ai-prompt-box">
+            <span class="highlight">당신은 경영 컨설턴트입니다.</span><br><br>
+            제공된 매출 데이터를 분석하여 아래 형식의 경영 보고서를 표 형태로 작성하세요.<br><br>
+            1. 현황 요약 (3개월 매출 추이 및 증감률)<br>
+            2. 문제점 분석 (감소 패턴 식별 및 원인 가설)<br>
+            3. <span class="highlight">원인 진단 (내부 요인 / 외부 요인 분류)</span><br>
+            4. 개선 방안 (단기 3가지 / 중기 2가지)<br>
+            5. 실행 계획 (담당자 + 일정 + 예산 + KPI)<br>
+            6. 기대 효과 (수치 기반 개선 효과 예측)
+          </div>
+
+          <div class="sub-title" style="margin-top:20px;">③ 기대 효과</div>
+          <div class="card card-orange" style="padding:20px;">
+            <ul class="effect-list">
+              <li>시간 절감: 반나절(4시간) → 30분 이내 (약 87% 절감)</li>
+              <li>보고서 품질: 6개 섹션 구조화 보고서 자동 완성</li>
+              <li>의사결정 속도: 임원 보고까지 당일 처리 가능</li>
+              <li>반복 활용: 매월 데이터만 교체하면 즉시 재사용</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 사례 3 -->
+      <div class="case-block">
+        <div class="case-header">
+          <div class="case-num-badge">3</div>
+          <div>
+            <div class="case-title-text">공공기관 민원 분석 보고서</div>
+            <div class="case-subtitle-text">시청/구청/공공기관 민원 담당 공무원</div>
+          </div>
+        </div>
+        <div class="case-body">
+          <table class="info-table mb-16">
+            <tbody>
+              <tr><td class="td-key">업무 상황</td><td>시청/구청/공공기관 민원 담당 공무원</td></tr>
+              <tr><td class="td-key">기존 문제</td><td>월별 민원 데이터를 엑셀로 정리 후 보고서 작성 → 3~4시간 소요</td></tr>
+              <tr><td class="td-key">데이터 현황</td><td>전화 민원 350건, 방문 민원 120건, 온라인 민원 89건 (전월 대비 각각 +15%, +8%, +22%)</td></tr>
+              <tr><td class="td-key">목표</td><td>민원 원인 분석 + 개선안 포함 보고서를 1시간 내 완성</td></tr>
+              <tr><td class="td-key">적용 AI</td><td>ChatGPT, Claude, Google Gemini 중 선택</td></tr>
+            </tbody>
+          </table>
+
+          <div class="sub-title">① 사용자가 AI에게 입력하는 문장 (STRO 공식 적용)</div>
+          <div class="prompt-box">
+            "저는 구청 민원 담당 공무원입니다. 이번 달 전화 민원 350건, 방문 민원 120건, 온라인 민원 89건이 접수되었고, 전월 대비 각각 15%, 8%, 22% 증가했습니다. 민원 증가 원인을 분석하고 개선 방안을 포함한 내부 보고서를 작성해주는 프롬프트를 만들어 주세요. 결과물은 <strong>민원 현황, 유형별 분류, 원인 분석, 개선 방안, 예산 절감 효과 순서</strong>로 표 형태로 출력해 주세요."
+          </div>
+
+          <div class="sub-title" style="margin-top:20px;">② AI가 자동 생성하는 민원 분석 프롬프트</div>
+          <div class="ai-prompt-box">
+            <span class="highlight">당신은 공공행정 전문 분석가입니다.</span><br><br>
+            제공된 민원 데이터를 분석하여 아래 형식의 공공기관 내부 보고서를 표 형태로 작성하세요.<br><br>
+            1. 민원 현황 요약 (채널별 건수 및 전월 대비 증감률)<br>
+            2. <span class="highlight">민원 유형 분류 (민원 성격별 상위 5개 유형 정리)</span><br>
+            3. 증가 원인 분석 (내부 요인 / 외부 요인 / 계절적 요인)<br>
+            4. 개선 방안 (단기 처리 방안 3가지 / 중장기 시스템 개선안 2가지)<br>
+            5. 예산 절감 효과 (온라인 전환 시 처리 비용 절감 추정액)
+          </div>
+
+          <div class="sub-title" style="margin-top:20px;">③ 기대 효과</div>
+          <div class="card card-orange" style="padding:20px;">
+            <ul class="effect-list">
+              <li>시간 절감: 3~4시간 → 1시간 이내 (약 70% 절감)</li>
+              <li>보고서 품질: 유형 분류 + 원인 + 개선안 자동 완성</li>
+              <li>예산 효과: 온라인 전환 유도 시 처리 비용 절감 근거 확보</li>
+              <li>정책 반영: 민원 데이터 기반 시정 개선안 즉시 보고 가능</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CH5 문제 정의 공식 ── -->
+    <section class="chapter" id="ch5">
+      <div class="chapter-header">
+        <div class="chapter-num">5</div>
+        <div class="chapter-info">
+          <div class="chapter-label">Chapter 5</div>
+          <div class="chapter-title">문제 정의 공식과 실습</div>
+        </div>
+        <div class="chapter-time">25분</div>
+      </div>
+
+      <div class="section-title">나쁜 질문 vs 좋은 질문</div>
+      <table class="info-table">
+        <thead><tr><th>❌ 나쁜 질문 (모호한 입력)</th><th>✅ 좋은 질문 (STRO 공식 적용)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--sp-red);">"회의록 만들어줘"</td>
+            <td style="color:var(--sp-green-dark);">"IT 스타트업 주간 팀 회의록을, 논의사항/결정사항/담당자/마감일이 포함된 표 형식으로 만드는 프롬프트를 작성해 주세요"</td>
+          </tr>
+          <tr>
+            <td style="color:var(--sp-red);">"보고서 써줘"</td>
+            <td style="color:var(--sp-green-dark);">"매출 감소 원인 분석 보고서를 경영진 보고용으로, 현황→원인→대안→기대효과 순서로 1장 분량으로 만드는 프롬프트를 작성해 주세요"</td>
+          </tr>
+          <tr>
+            <td style="color:var(--sp-red);">"민원 정리해줘"</td>
+            <td style="color:var(--sp-green-dark);">"공공기관 월별 민원 데이터를 유형별로 분류하고, 증가 원인 분석 및 개선방안을 포함한 보고서 프롬프트를 작성해 주세요"</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">STRO 공식 완전 정리</div>
+      <div class="stro-grid">
+        <div class="stro-card">
+          <div class="stro-letter">S</div>
+          <div class="stro-name">Situation (상황)</div>
+          <div class="stro-example">나는 _______ (직업/직급)이고, _______ 에서 일합니다.</div>
+        </div>
+        <div class="stro-card">
+          <div class="stro-letter">T</div>
+          <div class="stro-name">Task & Time (과제/시간)</div>
+          <div class="stro-example">_______ 작업을 _______ 마다 _______ 시간 소요됩니다.</div>
+        </div>
+        <div class="stro-card">
+          <div class="stro-letter">R</div>
+          <div class="stro-name">Result (원하는 결과)</div>
+          <div class="stro-example">_______ 이/가 자동으로 완성되었으면 합니다.</div>
+        </div>
+        <div class="stro-card">
+          <div class="stro-letter">O</div>
+          <div class="stro-name">Output Format (출력 형식)</div>
+          <div class="stro-example">결과물은 _______ 형태로 출력되면 좋겠습니다.</div>
+        </div>
+      </div>
+
+      <div class="section-title">현장 실습 워크시트</div>
+      <div class="worksheet">
+        <div class="worksheet-title">✏️ 나의 업무 문제를 STRO 공식으로 작성하기</div>
+        <div class="ws-row">
+          <div class="ws-label">S — 상황</div>
+          <div class="ws-input">나는 _______ (직업/직급)이고, _______ 에서 일합니다.</div>
+        </div>
+        <div class="ws-row">
+          <div class="ws-label">T — 과제/시간</div>
+          <div class="ws-input">_______ 작업을 _______ 마다 _______ 시간 소요됩니다.</div>
+        </div>
+        <div class="ws-row">
+          <div class="ws-label">R — 원하는 결과</div>
+          <div class="ws-input">_______ 이/가 자동으로 완성되었으면 합니다.</div>
+        </div>
+        <div class="ws-row">
+          <div class="ws-label">O — 출력 형식</div>
+          <div class="ws-input">결과물은 _______ 형태로 출력되면 좋겠습니다.</div>
+        </div>
+        <p style="margin-top:16px; font-size:13px; color:var(--sp-green-dark); font-weight:700;">
+          → 작성 완료 후 실제 ChatGPT/Claude에 입력하여 프롬프트를 생성해 보세요! 🚀
+        </p>
+      </div>
+    </section>
+
+    <!-- ── CH6 검증 & 윤리 ── -->
+    <section class="chapter" id="ch6">
+      <div class="chapter-header">
+        <div class="chapter-num">6</div>
+        <div class="chapter-info">
+          <div class="chapter-label">Chapter 6</div>
+          <div class="chapter-title">AI 답변 검증 & 윤리</div>
+        </div>
+        <div class="chapter-time">15분</div>
+      </div>
+
+      <div class="card card-red">
+        <div class="card-label label-red">⚠️ 경고</div>
+        <p style="font-size:16px; font-weight:700; color:var(--sp-text); margin-bottom:6px;">AI는 자신 있게 틀릴 수 있습니다.</p>
+        <p style="font-size:14px; margin:0;">AI는 확신에 차 보이는 어조로 틀린 정보를 제공할 수 있습니다. (AI 할루시네이션 현상)<br>따라서 AI 결과물은 <strong>반드시 인간의 검토</strong>가 필요합니다.</p>
+      </div>
+
+      <div class="section-title">AI 결과물 검증 7단계 체크리스트</div>
+      <table class="check-table">
+        <thead>
+          <tr>
+            <th style="width:40px;">#</th>
+            <th>확인 항목</th>
+            <th style="width:90px;">중요도</th>
+            <th style="width:50px;">체크</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="font-weight:800; color:var(--sp-green);">1</td><td>사실 확인: 수치, 날짜, 법령, 규정이 정확한가?</td><td><span class="badge-importance badge-vhigh">매우 높음</span></td><td>☐</td></tr>
+          <tr><td style="font-weight:800; color:var(--sp-green);">2</td><td>담당자 확인: 언급된 담당자/조직이 실제로 맞는가?</td><td><span class="badge-importance badge-high">높음</span></td><td>☐</td></tr>
+          <tr><td style="font-weight:800; color:var(--sp-green);">3</td><td>일정 확인: 마감일과 일정이 현실적인가?</td><td><span class="badge-importance badge-high">높음</span></td><td>☐</td></tr>
+          <tr><td style="font-weight:800; color:var(--sp-green);">4</td><td>누락 확인: 중요한 내용이 빠져있지 않은가?</td><td><span class="badge-importance badge-high">높음</span></td><td>☐</td></tr>
+          <tr><td style="font-weight:800; color:var(--sp-green);">5</td><td>맥락 확인: 우리 조직 상황에 맞는 내용인가?</td><td><span class="badge-importance badge-mid">중간</span></td><td>☐</td></tr>
+          <tr><td style="font-weight:800; color:var(--sp-green);">6</td><td>법적 검토: 법령/규정 위반 내용은 없는가?</td><td><span class="badge-importance badge-vhigh">매우 높음</span></td><td>☐</td></tr>
+          <tr><td style="font-weight:800; color:var(--sp-green);">7</td><td>개인정보: 민감정보가 노출되지 않았는가?</td><td><span class="badge-importance badge-vhigh">매우 높음</span></td><td>☐</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">AI 사용 윤리 원칙</div>
+      <div class="card card-blue">
+        <div class="card-label label-blue">📌 반드시 지켜야 할 5가지</div>
+        <table style="width:100%; font-size:13px; border-collapse:collapse;">
+          <tbody>
+            <tr style="border-bottom:1px solid rgba(45,70,185,0.15);">
+              <td style="padding:10px 6px; font-weight:800; color:var(--sp-blue); width:110px;">개인정보 보호</td>
+              <td style="padding:10px 6px; color:var(--sp-text-sub);">고객명, 주민번호, 연락처 등 개인정보를 AI에 직접 입력 금지</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(45,70,185,0.15);">
+              <td style="padding:10px 6px; font-weight:800; color:var(--sp-blue);">저작권 준수</td>
+              <td style="padding:10px 6px; color:var(--sp-text-sub);">AI가 생성한 콘텐츠도 저작권 이슈가 발생할 수 있음</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(45,70,185,0.15);">
+              <td style="padding:10px 6px; font-weight:800; color:var(--sp-blue);">정확성 책임</td>
+              <td style="padding:10px 6px; color:var(--sp-text-sub);">AI 결과물의 정확성에 대한 최종 책임은 사람에게 있음</td>
+            </tr>
+            <tr style="border-bottom:1px solid rgba(45,70,185,0.15);">
+              <td style="padding:10px 6px; font-weight:800; color:var(--sp-blue);">기밀 정보</td>
+              <td style="padding:10px 6px; color:var(--sp-text-sub);">회사 기밀, 미공개 정보는 AI에 입력하지 않음</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 6px; font-weight:800; color:var(--sp-blue);">투명한 활용</td>
+              <td style="padding:10px 6px; color:var(--sp-text-sub);">AI를 활용했음을 필요시 투명하게 밝힘</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── CH7 앞으로의 전략 ── -->
+    <section class="chapter" id="ch7">
+      <div class="chapter-header">
+        <div class="chapter-num green">7</div>
+        <div class="chapter-info">
+          <div class="chapter-label">Chapter 7</div>
+          <div class="chapter-title">앞으로의 AI 활용 전략</div>
+        </div>
+        <div class="chapter-time">10분</div>
+      </div>
+
+      <div class="section-title">AI 활용 성숙도 모델 — Level 1 → 5</div>
+      <div class="level-grid">
+        <div class="level-card l1">
+          <div class="level-num">Lv1</div>
+          <div class="level-name">AI 입문</div>
+          <div class="level-feat">ChatGPT를 처음 써본다</div>
+        </div>
+        <div class="level-card l2">
+          <div class="level-num">Lv2</div>
+          <div class="level-name">AI 활용</div>
+          <div class="level-feat">업무에 AI를 가끔 쓴다</div>
+        </div>
+        <div class="level-card l3">
+          <div class="level-num">Lv3</div>
+          <div class="level-name">AI 생산성</div>
+          <div class="level-feat">AI로 업무 효율을 높인다</div>
+        </div>
+        <div class="level-card l4">
+          <div class="level-num">Lv4</div>
+          <div class="level-name">AI 전략</div>
+          <div class="level-feat">AI를 업무 전략에 통합한다</div>
+        </div>
+        <div class="level-card l5">
+          <div class="level-num">Lv5</div>
+          <div class="level-name">AI 혁신</div>
+          <div class="level-feat">AI로 새로운 가치를 창출한다</div>
+        </div>
+      </div>
+
+      <div class="section-title">오늘 배운 가장 중요한 3가지</div>
+      <div class="step-flow">
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-circle green">1</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">프롬프트를 외우지 마세요</div>
+            <div class="step-desc">AI가 프롬프트를 만들어 줍니다. 당신의 문제를 설명하세요.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-circle green">2</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">문제 정의가 핵심 역량입니다</div>
+            <div class="step-desc">좋은 문제 설명 → 좋은 프롬프트 → 좋은 결과</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-left">
+            <div class="step-circle green">3</div>
+          </div>
+          <div class="step-content">
+            <div class="step-title">AI는 도구, 검증은 사람의 몫</div>
+            <div class="step-desc">AI 결과를 맹신하지 말고 반드시 검토 후 활용하세요.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">오늘부터 할 수 있는 행동 3가지</div>
+      <div class="action-grid">
+        <div class="action-card">
+          <div class="action-day">오늘 퇴근 후</div>
+          <div class="action-icon">🔍</div>
+          <div class="action-text">내 업무 중 가장 반복적인 작업 1가지를 선택한다</div>
+        </div>
+        <div class="action-card">
+          <div class="action-day">내일 출근 후</div>
+          <div class="action-icon">✍️</div>
+          <div class="action-text">STRO 공식으로 문제를 작성하고 ChatGPT/Claude에 입력한다</div>
+        </div>
+        <div class="action-card">
+          <div class="action-day">이번 주 금요일</div>
+          <div class="action-icon">💬</div>
+          <div class="action-text">결과를 동료에게 공유하고 피드백을 받는다</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 부록 ── -->
+    <section class="chapter" id="appendix">
+      <div class="chapter-header">
+        <div class="chapter-num green">✦</div>
+        <div class="chapter-info">
+          <div class="chapter-label">Appendix</div>
+          <div class="chapter-title">부록 — 실습 워크시트 & 참고자료</div>
+        </div>
+        <div class="chapter-time">참고용</div>
+      </div>
+
+      <div class="section-title">직종별 AI 활용 추천 업무 목록</div>
+      <table class="info-table">
+        <thead><tr><th style="width:140px;">직종</th><th>AI로 해결 가능한 대표 업무</th></tr></thead>
+        <tbody>
+          <tr><td class="td-key" style="width:140px;">공무원/공공기관</td><td>민원 분석, 보고서 초안 작성, 회의록 자동화, 행정문서 요약, 법령 검색</td></tr>
+          <tr><td class="td-key">영업/마케팅</td><td>시장 분석 보고서, 제안서 작성, 고객 이메일 초안, SNS 콘텐츠 생성</td></tr>
+          <tr><td class="td-key">인사/총무</td><td>채용 공고 작성, 교육 계획서, 규정 문서 정리, 복리후생 안내문</td></tr>
+          <tr><td class="td-key">기획/전략</td><td>경쟁사 분석, 사업계획서 초안, 프레젠테이션 자료, KPI 설정</td></tr>
+          <tr><td class="td-key">운영/물류</td><td>재고 분석 보고서, 프로세스 개선안, 원가 분석, 공급업체 비교</td></tr>
+          <tr><td class="td-key">교육/강사</td><td>강의 계획서, 교안 초안, 퀴즈 문제 생성, 학습 자료 요약</td></tr>
+          <tr><td class="td-key">의료/복지</td><td>환자 상담 스크립트, 케이스 요약, 정보 제공문, 교육 자료</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">추천 AI 도구 비교</div>
+      <table class="tool-table">
+        <thead>
+          <tr>
+            <th>AI 도구</th>
+            <th>개발사</th>
+            <th>무료 여부</th>
+            <th class="hide-mobile">접속 주소</th>
+            <th>추천 용도</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tool-name">ChatGPT</span></td>
+            <td>OpenAI</td>
+            <td><span class="free-badge">무료 (GPT-4o)</span></td>
+            <td class="hide-mobile" style="font-size:12px; color:var(--sp-text-sub);">chat.openai.com</td>
+            <td style="font-size:12px;">범용, 문서 작성, 분석</td>
+          </tr>
+          <tr>
+            <td><span class="tool-name">Claude</span></td>
+            <td>Anthropic</td>
+            <td><span class="free-badge">무료 (Claude 3.5)</span></td>
+            <td class="hide-mobile" style="font-size:12px; color:var(--sp-text-sub);">claude.ai</td>
+            <td style="font-size:12px;">긴 문서, 보고서 작성</td>
+          </tr>
+          <tr>
+            <td><span class="tool-name">Gemini</span></td>
+            <td>Google</td>
+            <td><span class="free-badge">무료</span></td>
+            <td class="hide-mobile" style="font-size:12px; color:var(--sp-text-sub);">gemini.google.com</td>
+            <td style="font-size:12px;">검색 연동, 구글 연계</td>
+          </tr>
+          <tr>
+            <td><span class="tool-name">Copilot</span></td>
+            <td>Microsoft</td>
+            <td><span class="free-badge">무료 (M365 연동)</span></td>
+            <td class="hide-mobile" style="font-size:12px; color:var(--sp-text-sub);">copilot.microsoft.com</td>
+            <td style="font-size:12px;">Word/Excel 연동</td>
+          </tr>
+          <tr>
+            <td><span class="tool-name">뤼튼</span></td>
+            <td>뤼튼테크</td>
+            <td><span class="free-badge">무료</span></td>
+            <td class="hide-mobile" style="font-size:12px; color:var(--sp-text-sub);">wrtn.ai</td>
+            <td style="font-size:12px;">한국어 특화, 이미지</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title">나의 AI 문제해결 계획서</div>
+      <div class="worksheet">
+        <div class="worksheet-title">📝 오늘 교육 후 바로 실천할 계획 작성</div>
+        <div class="ws-row">
+          <div class="ws-label">해결할 문제</div>
+          <div class="ws-input">AI로 해결하고 싶은 내 업무 문제는?</div>
+        </div>
+        <div class="ws-row">
+          <div class="ws-label">S — 상황</div>
+          <div class="ws-input">나는 _______ (직업/직급)이고, _______ 에서 일합니다.</div>
+        </div>
+        <div class="ws-row">
+          <div class="ws-label">T — 과제/시간</div>
+          <div class="ws-input">_______ 작업을 _______ 마다 _______ 시간 소요됩니다.</div>
+        </div>
+        <div class="ws-row">
+          <div class="ws-label">R — 결과물</div>
+          <div class="ws-input">_______ 이/가 자동으로 완성되었으면 합니다.</div>
+        </div>
+        <div class="ws-row">
+          <div class="ws-label">O — 출력 형식</div>
+          <div class="ws-input">결과물은 _______ 형태로 출력되면 좋겠습니다.</div>
+        </div>
+        <div class="ws-row">
+          <div class="ws-label">사용 AI 도구</div>
+          <div class="ws-input">ChatGPT  /  Claude  /  Gemini  /  기타: _______</div>
+        </div>
+        <div class="ws-row">
+          <div class="ws-label">실행 예정일</div>
+          <div class="ws-input">2025년 ___ 월 ___ 일</div>
+        </div>
+        <p style="margin-top:16px; font-size:13px; color:var(--sp-green-dark); font-weight:700;">
+          → 작성 완료 후 실제 AI에 입력하여 프롬프트를 생성해 보세요! 🚀
+        </p>
+      </div>
+
+    </section><!-- end appendix -->
+
+  </main>
+</div><!-- end page-layout -->
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="footer-logo">AI<span>닷</span> (AI DOT)</div>
+  <p class="footer-sub">생성형 AI 실무 교육 전문 브랜드 · 진해문화센터 AI 강의 · 기업/공공기관 출강</p>
+  <p class="footer-sub" style="margin-top:6px;">AI 무료 봄캠프 · 직장인 AI 생산성 향상 과정</p>
+</footer>
+
+<script>
+  const isMobile = () => window.innerWidth <= 600;
+
+  // 모바일: 현재 챕터 배지 토글
+  function toggleMobileBadge() {
+    const badge = document.getElementById('mobile-chapter-badge');
+    if (!badge) return;
+    badge.style.display = isMobile() ? 'flex' : 'none';
+  }
+  toggleMobileBadge();
+  window.addEventListener('resize', toggleMobileBadge);
+
+  const sections = document.querySelectorAll('.chapter');
+  const tocItems = document.querySelectorAll('.toc-item');
+  const mobTabs  = document.querySelectorAll('.mob-tab');
+
+  const chapterNames = {
+    ch0: '도입', ch1: '1장', ch2: '2장', ch3: '3장',
+    ch4: '4장', ch5: '5장', ch6: '6장', ch7: '7장', appendix: '부록'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+
+        // 사이드바 TOC
+        tocItems.forEach(item => item.classList.remove('active'));
+        const activeToc = document.querySelector(`.toc-item[href="#${id}"]`);
+        if (activeToc) activeToc.classList.add('active');
+
+        // 하단 모바일 탭
+        mobTabs.forEach(tab => tab.classList.remove('active'));
+        const activeMob = document.querySelector(`.mob-tab[data-section="${id}"]`);
+        if (activeMob) activeMob.classList.add('active');
+
+        // 배지 텍스트
+        const badge = document.getElementById('mobile-chapter-text');
+        if (badge && chapterNames[id]) badge.textContent = chapterNames[id];
+      }
+    });
+  }, { rootMargin: '-15% 0px -55% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // 부드러운 스크롤 (모바일 탭바 높이 보정)
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        const navH = isMobile() ? 50 : 64;
+        const top = target.getBoundingClientRect().top + window.pageYOffset - navH - 8;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // 카드 등장 애니메이션
+  const cards = document.querySelectorAll('.case-block, .card, .stat-card');
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationDelay = `${i * 0.04}s`;
+        entry.target.style.animation = 'fadeUp 0.35s ease both';
+        cardObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  cards.forEach(c => cardObserver.observe(c));
+</script>
+</body>
+</html>
